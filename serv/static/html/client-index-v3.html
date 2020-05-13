@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <header>
+        Hi, {{.Name}}!<a href="javascript:logout()">logout</a>
+    </header>
+    <div style="font-size: 120px; height: 4em; line-height: 4em; color: white;">
+        Welcome to This Page!
+    </div>
+    <div class="footer">&nbsp;</div>
+    <script src="http://advert.cuihovah-car.com/js/jquery.min.js"></script>
+    <script>
+        function logout() {
+            $.ajax({
+                url: "/clients",
+                type: "GET",
+                success: function(dd){
+                    dd.forEach(function(x){
+                        $.ajax({
+                            url: x + "/logout",
+                            type: "GET",
+                            xhrFields: {
+                                withCredentials: true
+                            }
+                        });
+                    })
+                    setTimeout(function(){
+                        window.location.href = "/"
+                    }, 2000)
+                }
+            });
+        }
+    </script>
+    <style>
+        body {
+            background: url("https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3333661340,2559030534&fm=15&gp=0.jpg") no-repeat;
+            background-size: 100% 100%;
+            height: 800px;
+            width: 100%;
+            position: relative;
+            margin: 0px;
+        }
+
+        header {
+            text-align: right;
+            height: 2em;
+            line-height: 2em;
+            background-color: rgba(27, 25, 25, 0.5);
+            color: white;
+            font-weight: bold;
+        }
+
+        header a {
+            margin: 0px 12px;
+            color: white;
+            display: inline-block;
+        }
+
+        .footer {
+            position: fixed;
+            width: 100%;
+            bottom: 0px;
+            height: 100px;
+            display: block;
+            background-color: black;
+            left: 0px;
+        }
+    </style>
+</body>
+</html>

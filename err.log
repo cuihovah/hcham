@@ -1,0 +1,528 @@
+fatal error: concurrent map writes
+
+goroutine 114 [running]:
+runtime.throw(0x14a7353, 0x15)
+	/usr/local/go/src/runtime/panic.go:1114 +0x72 fp=0xc00053d9f8 sp=0xc00053d9c8 pc=0x10342f2
+runtime.mapassign_faststr(0x14276e0, 0xc0000a6090, 0xc00052a0c0, 0x15, 0xc00052a0c0)
+	/usr/local/go/src/runtime/map_faststr.go:211 +0x3f7 fp=0xc00053da60 sp=0xc00053d9f8 pc=0x1014e17
+_/Users/cuiyunfeng/workspace/mmp/sso.(*SSOServ).Register(0xc0000a6060, 0x1548480, 0xc00054c000, 0xc000544100, 0x0, 0x0, 0x0)
+	/Users/cuiyunfeng/workspace/mmp/sso/sso-serv.go:77 +0xc6 fp=0xc00053dab0 sp=0xc00053da60 pc=0x13c6b16
+_/Users/cuiyunfeng/workspace/mmp/sso.(*SSOServ).Register-fm(0x1548480, 0xc00054c000, 0xc000544100, 0x0, 0x0, 0x0)
+	/Users/cuiyunfeng/workspace/mmp/sso/sso-serv.go:74 +0x66 fp=0xc00053daf8 sp=0xc00053dab0 pc=0x13c7936
+github.com/julienschmidt/httprouter.(*Router).ServeHTTP(0xc0003121c0, 0x1548480, 0xc00054c000, 0xc000544100)
+	/Users/cuiyunfeng/local/go/src/github.com/julienschmidt/httprouter/router.go:334 +0xb45 fp=0xc00053dbe8 sp=0xc00053daf8 pc=0x12f6a35
+net/http.serverHandler.ServeHTTP(0xc00030a380, 0x1548480, 0xc00054c000, 0xc000544100)
+	/usr/local/go/src/net/http/server.go:2807 +0xa3 fp=0xc00053dc18 sp=0xc00053dbe8 pc=0x12c6c63
+net/http.(*conn).serve(0xc00058c000, 0x1549080, 0xc0005241c0)
+	/usr/local/go/src/net/http/server.go:1895 +0x86c fp=0xc00053dfc8 sp=0xc00053dc18 pc=0x12c26dc
+runtime.goexit()
+	/usr/local/go/src/runtime/asm_amd64.s:1373 +0x1 fp=0xc00053dfd0 sp=0xc00053dfc8 pc=0x10631b1
+created by net/http.(*Server).Serve
+	/usr/local/go/src/net/http/server.go:2933 +0x35c
+
+goroutine 1 [chan receive]:
+main.main()
+	/Users/cuiyunfeng/workspace/mmp/main.go:43 +0x7fc
+
+goroutine 35 [select]:
+gopkg.in/mgo%2ev2.(*mongoCluster).syncServersLoop(0xc0002b4000)
+	/Users/cuiyunfeng/local/go/src/gopkg.in/mgo.v2/cluster.go:394 +0x2d8
+created by gopkg.in/mgo%2ev2.newCluster
+	/Users/cuiyunfeng/local/go/src/gopkg.in/mgo.v2/cluster.go:78 +0x158
+
+goroutine 51 [IO wait]:
+internal/poll.runtime_pollWait(0x9104818, 0x72, 0x0)
+	/usr/local/go/src/runtime/netpoll.go:203 +0x55
+internal/poll.(*pollDesc).wait(0xc000498018, 0x72, 0x0, 0x0, 0x149e9b3)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:87 +0x45
+internal/poll.(*pollDesc).waitRead(...)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:92
+internal/poll.(*FD).Accept(0xc000498000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0)
+	/usr/local/go/src/internal/poll/fd_unix.go:384 +0x1d4
+net.(*netFD).accept(0xc000498000, 0xc000398d78, 0xc000380000, 0x1a122f0)
+	/usr/local/go/src/net/fd_unix.go:238 +0x42
+net.(*TCPListener).accept(0xc00049c000, 0xc000398db8, 0x100e828, 0x30)
+	/usr/local/go/src/net/tcpsock_posix.go:139 +0x32
+net.(*TCPListener).Accept(0xc00049c000, 0x146ab60, 0xc000496120, 0x1421620, 0x1812fd0)
+	/usr/local/go/src/net/tcpsock.go:261 +0x64
+net/http.(*Server).Serve(0xc000494000, 0x15481c0, 0xc00049c000, 0x0, 0x0)
+	/usr/local/go/src/net/http/server.go:2901 +0x25d
+net/http.(*Server).ListenAndServe(0xc000494000, 0xc000494000, 0xc0000457a8)
+	/usr/local/go/src/net/http/server.go:2830 +0xb7
+net/http.ListenAndServe(...)
+	/usr/local/go/src/net/http/server.go:3086
+_/Users/cuiyunfeng/workspace/mmp/common.(*Server).Run(0xc000306078, 0x149d45e, 0x4)
+	/Users/cuiyunfeng/workspace/mmp/common/server.go:37 +0x105
+created by main.main
+	/Users/cuiyunfeng/workspace/mmp/main.go:37 +0x5fa
+
+goroutine 37 [sleep]:
+time.Sleep(0x37e11d600)
+	/usr/local/go/src/runtime/time.go:188 +0xba
+gopkg.in/mgo%2ev2.(*mongoServer).pinger(0xc0002be0e0, 0x1)
+	/Users/cuiyunfeng/local/go/src/gopkg.in/mgo.v2/server.go:301 +0x463
+created by gopkg.in/mgo%2ev2.newServer
+	/Users/cuiyunfeng/local/go/src/gopkg.in/mgo.v2/server.go:89 +0x106
+
+goroutine 50 [IO wait]:
+internal/poll.runtime_pollWait(0x9104f18, 0x72, 0xffffffffffffffff)
+	/usr/local/go/src/runtime/netpoll.go:203 +0x55
+internal/poll.(*pollDesc).wait(0xc00016a298, 0x72, 0x0, 0x24, 0xffffffffffffffff)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:87 +0x45
+internal/poll.(*pollDesc).waitRead(...)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:92
+internal/poll.(*FD).Read(0xc00016a280, 0xc000126150, 0x24, 0x24, 0x0, 0x0, 0x0)
+	/usr/local/go/src/internal/poll/fd_unix.go:169 +0x201
+net.(*netFD).Read(0xc00016a280, 0xc000126150, 0x24, 0x24, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/fd_unix.go:202 +0x4f
+net.(*conn).Read(0xc000306000, 0xc000126150, 0x24, 0x24, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/net.go:184 +0x8e
+gopkg.in/mgo%2ev2.fill(0x154cb40, 0xc000306000, 0xc000126150, 0x24, 0x24, 0x0, 0x11)
+	/Users/cuiyunfeng/local/go/src/gopkg.in/mgo.v2/socket.go:535 +0x53
+gopkg.in/mgo%2ev2.(*mongoSocket).readLoop(0xc00030a000)
+	/Users/cuiyunfeng/local/go/src/gopkg.in/mgo.v2/socket.go:551 +0x54c
+created by gopkg.in/mgo%2ev2.newSocket
+	/Users/cuiyunfeng/local/go/src/gopkg.in/mgo.v2/socket.go:194 +0x1c8
+
+goroutine 20 [IO wait]:
+internal/poll.runtime_pollWait(0x9104e38, 0x72, 0x0)
+	/usr/local/go/src/runtime/netpoll.go:203 +0x55
+internal/poll.(*pollDesc).wait(0xc000334018, 0x72, 0x0, 0x0, 0x149e9b3)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:87 +0x45
+internal/poll.(*pollDesc).waitRead(...)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:92
+internal/poll.(*FD).Accept(0xc000334000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0)
+	/usr/local/go/src/internal/poll/fd_unix.go:384 +0x1d4
+net.(*netFD).accept(0xc000334000, 0x88853f8a9d64ae12, 0xe7ba9d64ae12, 0x100000001)
+	/usr/local/go/src/net/fd_unix.go:238 +0x42
+net.(*TCPListener).accept(0xc00031a200, 0x5eb6b9ce, 0xc000325db8, 0x10b7886)
+	/usr/local/go/src/net/tcpsock_posix.go:139 +0x32
+net.(*TCPListener).Accept(0xc00031a200, 0xc000325e08, 0x18, 0xc000082600, 0x12c710c)
+	/usr/local/go/src/net/tcpsock.go:261 +0x64
+net/http.(*Server).Serve(0xc00030a380, 0x15481c0, 0xc00031a200, 0x0, 0x0)
+	/usr/local/go/src/net/http/server.go:2901 +0x25d
+net/http.(*Server).ListenAndServe(0xc00030a380, 0xc00030a380, 0xc0000457a8)
+	/usr/local/go/src/net/http/server.go:2830 +0xb7
+net/http.ListenAndServe(...)
+	/usr/local/go/src/net/http/server.go:3086
+_/Users/cuiyunfeng/workspace/mmp/sso.(*SSOServ).Run(0xc0000a6060, 0x149d44a, 0x4)
+	/Users/cuiyunfeng/workspace/mmp/sso/sso-serv.go:108 +0x3c5
+created by main.main
+	/Users/cuiyunfeng/workspace/mmp/main.go:28 +0x334
+
+goroutine 21 [IO wait]:
+internal/poll.runtime_pollWait(0x91048f8, 0x72, 0x0)
+	/usr/local/go/src/runtime/netpoll.go:203 +0x55
+internal/poll.(*pollDesc).wait(0xc0003aa018, 0x72, 0x0, 0x0, 0x149e9b3)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:87 +0x45
+internal/poll.(*pollDesc).waitRead(...)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:92
+internal/poll.(*FD).Accept(0xc0003aa000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0)
+	/usr/local/go/src/internal/poll/fd_unix.go:384 +0x1d4
+net.(*netFD).accept(0xc0003aa000, 0xc00039cd48, 0xc00004d000, 0x1a11c28)
+	/usr/local/go/src/net/fd_unix.go:238 +0x42
+net.(*TCPListener).accept(0xc0003a6020, 0xc00039cd88, 0x100e828, 0x30)
+	/usr/local/go/src/net/tcpsock_posix.go:139 +0x32
+net.(*TCPListener).Accept(0xc0003a6020, 0x146ab60, 0xc000392150, 0x1421620, 0x1812fd0)
+	/usr/local/go/src/net/tcpsock.go:261 +0x64
+net/http.(*Server).Serve(0xc0003a8000, 0x15481c0, 0xc0003a6020, 0x0, 0x0)
+	/usr/local/go/src/net/http/server.go:2901 +0x25d
+net/http.(*Server).ListenAndServe(0xc0003a8000, 0xc0003a8000, 0xc0003a4020)
+	/usr/local/go/src/net/http/server.go:2830 +0xb7
+net/http.ListenAndServe(...)
+	/usr/local/go/src/net/http/server.go:3086
+_/Users/cuiyunfeng/workspace/mmp/sso.(*ClientServ).Run(0xc0000922a0, 0x149d44e, 0x4)
+	/Users/cuiyunfeng/workspace/mmp/sso/client-web.go:137 +0x484
+created by main.main
+	/Users/cuiyunfeng/workspace/mmp/main.go:31 +0x3e0
+
+goroutine 22 [IO wait]:
+internal/poll.runtime_pollWait(0x9104c78, 0x72, 0x0)
+	/usr/local/go/src/runtime/netpoll.go:203 +0x55
+internal/poll.(*pollDesc).wait(0xc00016a318, 0x72, 0x0, 0x0, 0x149e9b3)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:87 +0x45
+internal/poll.(*pollDesc).waitRead(...)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:92
+internal/poll.(*FD).Accept(0xc00016a300, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0)
+	/usr/local/go/src/internal/poll/fd_unix.go:384 +0x1d4
+net.(*netFD).accept(0xc00016a300, 0xc000057d48, 0xc000080000, 0x1a10e98)
+	/usr/local/go/src/net/fd_unix.go:238 +0x42
+net.(*TCPListener).accept(0xc000122e00, 0xc000057d88, 0x100e828, 0x30)
+	/usr/local/go/src/net/tcpsock_posix.go:139 +0x32
+net.(*TCPListener).Accept(0xc000122e00, 0x146ab60, 0xc000115800, 0x1421620, 0x1812fd0)
+	/usr/local/go/src/net/tcpsock.go:261 +0x64
+net/http.(*Server).Serve(0xc0002be460, 0x15481c0, 0xc000122e00, 0x0, 0x0)
+	/usr/local/go/src/net/http/server.go:2901 +0x25d
+net/http.(*Server).ListenAndServe(0xc0002be460, 0xc0002be460, 0xc00012e3c0)
+	/usr/local/go/src/net/http/server.go:2830 +0xb7
+net/http.ListenAndServe(...)
+	/usr/local/go/src/net/http/server.go:3086
+_/Users/cuiyunfeng/workspace/mmp/sso.(*ClientServ).Run(0xc000092360, 0x149d452, 0x4)
+	/Users/cuiyunfeng/workspace/mmp/sso/client-web.go:137 +0x484
+created by main.main
+	/Users/cuiyunfeng/workspace/mmp/main.go:32 +0x41a
+
+goroutine 23 [IO wait]:
+internal/poll.runtime_pollWait(0x9104d58, 0x72, 0x0)
+	/usr/local/go/src/runtime/netpoll.go:203 +0x55
+internal/poll.(*pollDesc).wait(0xc0000b6018, 0x72, 0x0, 0x0, 0x149e9b3)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:87 +0x45
+internal/poll.(*pollDesc).waitRead(...)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:92
+internal/poll.(*FD).Accept(0xc0000b6000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0)
+	/usr/local/go/src/internal/poll/fd_unix.go:384 +0x1d4
+net.(*netFD).accept(0xc0000b6000, 0xc000320d48, 0x1823b60, 0x1a107d0)
+	/usr/local/go/src/net/fd_unix.go:238 +0x42
+net.(*TCPListener).accept(0xc000094200, 0xc000320d88, 0x100e828, 0x30)
+	/usr/local/go/src/net/tcpsock_posix.go:139 +0x32
+net.(*TCPListener).Accept(0xc000094200, 0x146ab60, 0xc0000a6240, 0x1421620, 0x1812fd0)
+	/usr/local/go/src/net/tcpsock.go:261 +0x64
+net/http.(*Server).Serve(0xc0000a41c0, 0x15481c0, 0xc000094200, 0x0, 0x0)
+	/usr/local/go/src/net/http/server.go:2901 +0x25d
+net/http.(*Server).ListenAndServe(0xc0000a41c0, 0xc0000a41c0, 0xc00009e120)
+	/usr/local/go/src/net/http/server.go:2830 +0xb7
+net/http.ListenAndServe(...)
+	/usr/local/go/src/net/http/server.go:3086
+_/Users/cuiyunfeng/workspace/mmp/sso.(*ClientServ).Run(0xc000092420, 0x149d456, 0x4)
+	/Users/cuiyunfeng/workspace/mmp/sso/client-web.go:137 +0x484
+created by main.main
+	/Users/cuiyunfeng/workspace/mmp/main.go:33 +0x454
+
+goroutine 24 [IO wait]:
+internal/poll.runtime_pollWait(0x9104b98, 0x72, 0x0)
+	/usr/local/go/src/runtime/netpoll.go:203 +0x55
+internal/poll.(*pollDesc).wait(0xc000402018, 0x72, 0x0, 0x0, 0x149e9b3)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:87 +0x45
+internal/poll.(*pollDesc).waitRead(...)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:92
+internal/poll.(*FD).Accept(0xc000402000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0)
+	/usr/local/go/src/internal/poll/fd_unix.go:384 +0x1d4
+net.(*netFD).accept(0xc000402000, 0xc00005bd48, 0xc000104c00, 0x1a10108)
+	/usr/local/go/src/net/fd_unix.go:238 +0x42
+net.(*TCPListener).accept(0xc00000e060, 0xc00005bd88, 0x100e828, 0x30)
+	/usr/local/go/src/net/tcpsock_posix.go:139 +0x32
+net.(*TCPListener).Accept(0xc00000e060, 0x146ab60, 0xc000400120, 0x1421620, 0x1812fd0)
+	/usr/local/go/src/net/tcpsock.go:261 +0x64
+net/http.(*Server).Serve(0xc00007e000, 0x15481c0, 0xc00000e060, 0x0, 0x0)
+	/usr/local/go/src/net/http/server.go:2901 +0x25d
+net/http.(*Server).ListenAndServe(0xc00007e000, 0xc00007e000, 0xc00009e100)
+	/usr/local/go/src/net/http/server.go:2830 +0xb7
+net/http.ListenAndServe(...)
+	/usr/local/go/src/net/http/server.go:3086
+_/Users/cuiyunfeng/workspace/mmp/sso.(*ClientServ).Run(0xc0000924e0, 0x149d45a, 0x4)
+	/Users/cuiyunfeng/workspace/mmp/sso/client-web.go:137 +0x484
+created by main.main
+	/Users/cuiyunfeng/workspace/mmp/main.go:34 +0x48e
+
+goroutine 25 [select]:
+net/http.(*persistConn).roundTrip(0xc00051e000, 0xc000304660, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/http/transport.go:2498 +0x756
+net/http.(*Transport).roundTrip(0x181a700, 0xc0000b8000, 0xc000308530, 0xc000321af8, 0x100e828)
+	/usr/local/go/src/net/http/transport.go:565 +0xad9
+net/http.(*Transport).RoundTrip(0x181a700, 0xc0000b8000, 0x181a700, 0x0, 0x0)
+	/usr/local/go/src/net/http/roundtrip.go:17 +0x35
+net/http.send(0xc0000b8000, 0x1541ac0, 0x181a700, 0x0, 0x0, 0x0, 0xc0003060c8, 0x400, 0x1, 0x0)
+	/usr/local/go/src/net/http/client.go:252 +0x43e
+net/http.(*Client).send(0x1822d40, 0xc0000b8000, 0x0, 0x0, 0x0, 0xc0003060c8, 0x0, 0x1, 0x1064cf0)
+	/usr/local/go/src/net/http/client.go:176 +0xfa
+net/http.(*Client).do(0x1822d40, 0xc0000b8000, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/http/client.go:699 +0x44a
+net/http.(*Client).Do(...)
+	/usr/local/go/src/net/http/client.go:567
+net/http.(*Client).Post(0x1822d40, 0xc00009e120, 0x1b, 0x14a1ea8, 0xa, 0x1541ec0, 0xc0000941e0, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/http/client.go:827 +0x195
+net/http.Post(0xc00009e120, 0x1b, 0x14a1ea8, 0xa, 0x1541ec0, 0xc0000941e0, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/http/client.go:807 +0x73
+created by _/Users/cuiyunfeng/workspace/mmp/sso.(*ClientServ).Run
+	/Users/cuiyunfeng/workspace/mmp/sso/client-web.go:136 +0x42f
+
+goroutine 39 [select]:
+net/http.(*persistConn).roundTrip(0xc000136fc0, 0xc0001159b0, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/http/transport.go:2498 +0x756
+net/http.(*Transport).roundTrip(0x181a700, 0xc0002b4200, 0xc0001132d0, 0xc000058af8, 0x100e828)
+	/usr/local/go/src/net/http/transport.go:565 +0xad9
+net/http.(*Transport).RoundTrip(0x181a700, 0xc0002b4200, 0x181a700, 0x0, 0x0)
+	/usr/local/go/src/net/http/roundtrip.go:17 +0x35
+net/http.send(0xc0002b4200, 0x1541ac0, 0x181a700, 0x0, 0x0, 0x0, 0xc000128080, 0x149d522, 0x1, 0x0)
+	/usr/local/go/src/net/http/client.go:252 +0x43e
+net/http.(*Client).send(0x1822d40, 0xc0002b4200, 0x0, 0x0, 0x0, 0xc000128080, 0x0, 0x1, 0xc000092000)
+	/usr/local/go/src/net/http/client.go:176 +0xfa
+net/http.(*Client).do(0x1822d40, 0xc0002b4200, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/http/client.go:699 +0x44a
+net/http.(*Client).Do(...)
+	/usr/local/go/src/net/http/client.go:567
+net/http.(*Client).Post(0x1822d40, 0xc00012e3c0, 0x1b, 0x14a1ea8, 0xa, 0x1541ec0, 0xc000122de0, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/http/client.go:827 +0x195
+net/http.Post(0xc00012e3c0, 0x1b, 0x14a1ea8, 0xa, 0x1541ec0, 0xc000122de0, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/http/client.go:807 +0x73
+created by _/Users/cuiyunfeng/workspace/mmp/sso.(*ClientServ).Run
+	/Users/cuiyunfeng/workspace/mmp/sso/client-web.go:136 +0x42f
+
+goroutine 3 [select]:
+net/http.(*persistConn).roundTrip(0xc000412000, 0xc000400210, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/http/transport.go:2498 +0x756
+net/http.(*Transport).roundTrip(0x181a700, 0xc000408000, 0xc0000200a0, 0xc00005caf8, 0x100e828)
+	/usr/local/go/src/net/http/transport.go:565 +0xad9
+net/http.(*Transport).RoundTrip(0x181a700, 0xc000408000, 0x181a700, 0x0, 0x0)
+	/usr/local/go/src/net/http/roundtrip.go:17 +0x35
+net/http.send(0xc000408000, 0x1541ac0, 0x181a700, 0x0, 0x0, 0x0, 0xc000010020, 0x400, 0x1, 0x0)
+	/usr/local/go/src/net/http/client.go:252 +0x43e
+net/http.(*Client).send(0x1822d40, 0xc000408000, 0x0, 0x0, 0x0, 0xc000010020, 0x0, 0x1, 0xc000400180)
+	/usr/local/go/src/net/http/client.go:176 +0xfa
+net/http.(*Client).do(0x1822d40, 0xc000408000, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/http/client.go:699 +0x44a
+net/http.(*Client).Do(...)
+	/usr/local/go/src/net/http/client.go:567
+net/http.(*Client).Post(0x1822d40, 0xc00009e100, 0x1b, 0x14a1ea8, 0xa, 0x1541ec0, 0xc00000e040, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/http/client.go:827 +0x195
+net/http.Post(0xc00009e100, 0x1b, 0x14a1ea8, 0xa, 0x1541ec0, 0xc00000e040, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/http/client.go:807 +0x73
+created by _/Users/cuiyunfeng/workspace/mmp/sso.(*ClientServ).Run
+	/Users/cuiyunfeng/workspace/mmp/sso/client-web.go:136 +0x42f
+
+goroutine 52 [IO wait]:
+internal/poll.runtime_pollWait(0x91049d8, 0x72, 0x0)
+	/usr/local/go/src/runtime/netpoll.go:203 +0x55
+internal/poll.(*pollDesc).wait(0xc0000b6118, 0x72, 0x0, 0x0, 0x149e9b3)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:87 +0x45
+internal/poll.(*pollDesc).waitRead(...)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:92
+internal/poll.(*FD).Accept(0xc0000b6100, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0)
+	/usr/local/go/src/internal/poll/fd_unix.go:384 +0x1d4
+net.(*netFD).accept(0xc0000b6100, 0xc000322d60, 0x1823b60, 0x1a107d0)
+	/usr/local/go/src/net/fd_unix.go:238 +0x42
+net.(*TCPListener).accept(0xc000094220, 0xc000322da0, 0x100e828, 0x30)
+	/usr/local/go/src/net/tcpsock_posix.go:139 +0x32
+net.(*TCPListener).Accept(0xc000094220, 0x146ab60, 0xc0000a6420, 0x1421620, 0x1812fd0)
+	/usr/local/go/src/net/tcpsock.go:261 +0x64
+net/http.(*Server).Serve(0xc0000a42a0, 0x15481c0, 0xc000094220, 0x0, 0x0)
+	/usr/local/go/src/net/http/server.go:2901 +0x25d
+net/http.(*Server).ListenAndServe(0xc0000a42a0, 0xc0000a42a0, 0xc000322fa8)
+	/usr/local/go/src/net/http/server.go:2830 +0xb7
+net/http.ListenAndServe(...)
+	/usr/local/go/src/net/http/server.go:3086
+_/Users/cuiyunfeng/workspace/mmp/advert.(*Server).Run(0xc00031a300, 0x149d462, 0x4)
+	/Users/cuiyunfeng/workspace/mmp/advert/simpleHTTP.go:74 +0x29a
+created by main.main
+	/Users/cuiyunfeng/workspace/mmp/main.go:39 +0x6ea
+
+goroutine 53 [IO wait]:
+internal/poll.runtime_pollWait(0x9104ab8, 0x72, 0x0)
+	/usr/local/go/src/runtime/netpoll.go:203 +0x55
+internal/poll.(*pollDesc).wait(0xc000334098, 0x72, 0x0, 0x0, 0x149e9b3)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:87 +0x45
+internal/poll.(*pollDesc).waitRead(...)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:92
+internal/poll.(*FD).Accept(0xc000334080, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0)
+	/usr/local/go/src/internal/poll/fd_unix.go:384 +0x1d4
+net.(*netFD).accept(0xc000334080, 0xc000326d60, 0xc00004cc00, 0x1a11560)
+	/usr/local/go/src/net/fd_unix.go:238 +0x42
+net.(*TCPListener).accept(0xc00031a340, 0xc000326da0, 0x100e828, 0x30)
+	/usr/local/go/src/net/tcpsock_posix.go:139 +0x32
+net.(*TCPListener).Accept(0xc00031a340, 0x146ab60, 0xc0003045d0, 0x1421620, 0x1812fd0)
+	/usr/local/go/src/net/tcpsock.go:261 +0x64
+net/http.(*Server).Serve(0xc00030a460, 0x15481c0, 0xc00031a340, 0x0, 0x0)
+	/usr/local/go/src/net/http/server.go:2901 +0x25d
+net/http.(*Server).ListenAndServe(0xc00030a460, 0xc00030a460, 0xc000326fa8)
+	/usr/local/go/src/net/http/server.go:2830 +0xb7
+net/http.ListenAndServe(...)
+	/usr/local/go/src/net/http/server.go:3086
+_/Users/cuiyunfeng/workspace/mmp/imgserv.(*Server).Run(0xc00031a320, 0x149d466, 0x4)
+	/Users/cuiyunfeng/workspace/mmp/imgserv/server.go:57 +0x29a
+created by main.main
+	/Users/cuiyunfeng/workspace/mmp/main.go:41 +0x781
+
+goroutine 66 [select]:
+net/http.(*persistConn).roundTrip(0xc000340000, 0xc000304750, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/http/transport.go:2498 +0x756
+net/http.(*Transport).roundTrip(0x181a700, 0xc00033c000, 0xc000308560, 0xc000327af8, 0x100e828)
+	/usr/local/go/src/net/http/transport.go:565 +0xad9
+net/http.(*Transport).RoundTrip(0x181a700, 0xc00033c000, 0x181a700, 0x0, 0x0)
+	/usr/local/go/src/net/http/roundtrip.go:17 +0x35
+net/http.send(0xc00033c000, 0x1541ac0, 0x181a700, 0x0, 0x0, 0x0, 0xc0003060d8, 0x203000, 0x1, 0x0)
+	/usr/local/go/src/net/http/client.go:252 +0x43e
+net/http.(*Client).send(0x1822d40, 0xc00033c000, 0x0, 0x0, 0x0, 0xc0003060d8, 0x0, 0x1, 0xc0003046c0)
+	/usr/local/go/src/net/http/client.go:176 +0xfa
+net/http.(*Client).do(0x1822d40, 0xc00033c000, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/http/client.go:699 +0x44a
+net/http.(*Client).Do(...)
+	/usr/local/go/src/net/http/client.go:567
+net/http.(*Client).Post(0x1822d40, 0xc0003a4020, 0x1b, 0x14a1ea8, 0xa, 0x1541ec0, 0xc0003a6000, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/http/client.go:827 +0x195
+net/http.Post(0xc0003a4020, 0x1b, 0x14a1ea8, 0xa, 0x1541ec0, 0xc0003a6000, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/http/client.go:807 +0x73
+created by _/Users/cuiyunfeng/workspace/mmp/sso.(*ClientServ).Run
+	/Users/cuiyunfeng/workspace/mmp/sso/client-web.go:136 +0x42f
+
+goroutine 55 [IO wait]:
+internal/poll.runtime_pollWait(0x9104738, 0x72, 0xffffffffffffffff)
+	/usr/local/go/src/runtime/netpoll.go:203 +0x55
+internal/poll.(*pollDesc).wait(0xc00016a518, 0x72, 0x1000, 0x1000, 0xffffffffffffffff)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:87 +0x45
+internal/poll.(*pollDesc).waitRead(...)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:92
+internal/poll.(*FD).Read(0xc00016a500, 0xc000339000, 0x1000, 0x1000, 0x0, 0x0, 0x0)
+	/usr/local/go/src/internal/poll/fd_unix.go:169 +0x201
+net.(*netFD).Read(0xc00016a500, 0xc000339000, 0x1000, 0x1000, 0x2000, 0x9106a30, 0x400)
+	/usr/local/go/src/net/fd_unix.go:202 +0x4f
+net.(*conn).Read(0xc0003060e0, 0xc000339000, 0x1000, 0x1000, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/net.go:184 +0x8e
+net/http.(*persistConn).Read(0xc00051e000, 0xc000339000, 0x1000, 0x1000, 0x1006c5d, 0x60, 0x0)
+	/usr/local/go/src/net/http/transport.go:1825 +0x75
+bufio.(*Reader).fill(0xc000302480)
+	/usr/local/go/src/bufio/bufio.go:100 +0x103
+bufio.(*Reader).Peek(0xc000302480, 0x1, 0xc0004a60c0, 0x0, 0xc000080000, 0xc0002bb4d0, 0x10000000105284c)
+	/usr/local/go/src/bufio/bufio.go:138 +0x4f
+net/http.(*persistConn).readLoop(0xc00051e000)
+	/usr/local/go/src/net/http/transport.go:1978 +0x1a8
+created by net/http.(*Transport).dialConn
+	/usr/local/go/src/net/http/transport.go:1647 +0xc56
+
+goroutine 5 [IO wait]:
+internal/poll.runtime_pollWait(0x9104498, 0x72, 0xffffffffffffffff)
+	/usr/local/go/src/runtime/netpoll.go:203 +0x55
+internal/poll.(*pollDesc).wait(0xc00016a618, 0x72, 0x1000, 0x1000, 0xffffffffffffffff)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:87 +0x45
+internal/poll.(*pollDesc).waitRead(...)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:92
+internal/poll.(*FD).Read(0xc00016a600, 0xc000414000, 0x1000, 0x1000, 0x0, 0x0, 0x0)
+	/usr/local/go/src/internal/poll/fd_unix.go:169 +0x201
+net.(*netFD).Read(0xc00016a600, 0xc000414000, 0x1000, 0x1000, 0x100000000000000, 0x0, 0x2)
+	/usr/local/go/src/net/fd_unix.go:202 +0x4f
+net.(*conn).Read(0xc000010030, 0xc000414000, 0x1000, 0x1000, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/net.go:184 +0x8e
+net/http.(*persistConn).Read(0xc000340000, 0xc000414000, 0x1000, 0x1000, 0x1006c5d, 0x60, 0x0)
+	/usr/local/go/src/net/http/transport.go:1825 +0x75
+bufio.(*Reader).fill(0xc00040c3c0)
+	/usr/local/go/src/bufio/bufio.go:100 +0x103
+bufio.(*Reader).Peek(0xc00040c3c0, 0x1, 0xc0000a0060, 0x1, 0x1, 0xc000117450, 0xc00012e120)
+	/usr/local/go/src/bufio/bufio.go:138 +0x4f
+net/http.(*persistConn).readLoop(0xc000340000)
+	/usr/local/go/src/net/http/transport.go:1978 +0x1a8
+created by net/http.(*Transport).dialConn
+	/usr/local/go/src/net/http/transport.go:1647 +0xc56
+
+goroutine 84 [IO wait]:
+internal/poll.runtime_pollWait(0x9104658, 0x72, 0xffffffffffffffff)
+	/usr/local/go/src/runtime/netpoll.go:203 +0x55
+internal/poll.(*pollDesc).wait(0xc000528098, 0x72, 0x1000, 0x1000, 0xffffffffffffffff)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:87 +0x45
+internal/poll.(*pollDesc).waitRead(...)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:92
+internal/poll.(*FD).Read(0xc000528080, 0xc00052c000, 0x1000, 0x1000, 0x0, 0x0, 0x0)
+	/usr/local/go/src/internal/poll/fd_unix.go:169 +0x201
+net.(*netFD).Read(0xc000528080, 0xc00052c000, 0x1000, 0x1000, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/fd_unix.go:202 +0x4f
+net.(*conn).Read(0xc000522008, 0xc00052c000, 0x1000, 0x1000, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/net.go:184 +0x8e
+net/http.(*persistConn).Read(0xc000412000, 0xc00052c000, 0x1000, 0x1000, 0x1006c5d, 0x60, 0x0)
+	/usr/local/go/src/net/http/transport.go:1825 +0x75
+bufio.(*Reader).fill(0xc00050c3c0)
+	/usr/local/go/src/bufio/bufio.go:100 +0x103
+bufio.(*Reader).Peek(0xc00050c3c0, 0x1, 0xc0004a6120, 0x0, 0x0, 0x0, 0x0)
+	/usr/local/go/src/bufio/bufio.go:138 +0x4f
+net/http.(*persistConn).readLoop(0xc000412000)
+	/usr/local/go/src/net/http/transport.go:1978 +0x1a8
+created by net/http.(*Transport).dialConn
+	/usr/local/go/src/net/http/transport.go:1647 +0xc56
+
+goroutine 45 [IO wait]:
+internal/poll.runtime_pollWait(0x9104578, 0x72, 0xffffffffffffffff)
+	/usr/local/go/src/runtime/netpoll.go:203 +0x55
+internal/poll.(*pollDesc).wait(0xc000498118, 0x72, 0x1000, 0x1000, 0xffffffffffffffff)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:87 +0x45
+internal/poll.(*pollDesc).waitRead(...)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:92
+internal/poll.(*FD).Read(0xc000498100, 0xc000175000, 0x1000, 0x1000, 0x0, 0x0, 0x0)
+	/usr/local/go/src/internal/poll/fd_unix.go:169 +0x201
+net.(*netFD).Read(0xc000498100, 0xc000175000, 0x1000, 0x1000, 0x92a2e40, 0x0, 0x20300000000000)
+	/usr/local/go/src/net/fd_unix.go:202 +0x4f
+net.(*conn).Read(0xc0001280a0, 0xc000175000, 0x1000, 0x1000, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/net.go:184 +0x8e
+net/http.(*persistConn).Read(0xc000136fc0, 0xc000175000, 0x1000, 0x1000, 0x1006c5d, 0x60, 0x0)
+	/usr/local/go/src/net/http/transport.go:1825 +0x75
+bufio.(*Reader).fill(0xc00012af00)
+	/usr/local/go/src/bufio/bufio.go:100 +0x103
+bufio.(*Reader).Peek(0xc00012af00, 0x1, 0xc0003ae000, 0x5, 0x0, 0x0, 0x0)
+	/usr/local/go/src/bufio/bufio.go:138 +0x4f
+net/http.(*persistConn).readLoop(0xc000136fc0)
+	/usr/local/go/src/net/http/transport.go:1978 +0x1a8
+created by net/http.(*Transport).dialConn
+	/usr/local/go/src/net/http/transport.go:1647 +0xc56
+
+goroutine 56 [select]:
+net/http.(*persistConn).writeLoop(0xc00051e000)
+	/usr/local/go/src/net/http/transport.go:2277 +0x11c
+created by net/http.(*Transport).dialConn
+	/usr/local/go/src/net/http/transport.go:1648 +0xc7b
+
+goroutine 85 [select]:
+net/http.(*persistConn).writeLoop(0xc000412000)
+	/usr/local/go/src/net/http/transport.go:2277 +0x11c
+created by net/http.(*Transport).dialConn
+	/usr/local/go/src/net/http/transport.go:1648 +0xc7b
+
+goroutine 46 [select]:
+net/http.(*persistConn).writeLoop(0xc000136fc0)
+	/usr/local/go/src/net/http/transport.go:2277 +0x11c
+created by net/http.(*Transport).dialConn
+	/usr/local/go/src/net/http/transport.go:1648 +0xc7b
+
+goroutine 6 [select]:
+net/http.(*persistConn).writeLoop(0xc000340000)
+	/usr/local/go/src/net/http/transport.go:2277 +0x11c
+created by net/http.(*Transport).dialConn
+	/usr/local/go/src/net/http/transport.go:1648 +0xc7b
+
+goroutine 115 [sync.Cond.Wait]:
+runtime.goparkunlock(...)
+	/usr/local/go/src/runtime/proc.go:310
+sync.runtime_notifyListWait(0xc000592090, 0x0)
+	/usr/local/go/src/runtime/sema.go:513 +0xf8
+sync.(*Cond).Wait(0xc000592080)
+	/usr/local/go/src/sync/cond.go:56 +0x9d
+net/http.(*connReader).abortPendingRead(0xc0005880f0)
+	/usr/local/go/src/net/http/server.go:726 +0xad
+net/http.(*response).finishRequest(0xc0005a4000)
+	/usr/local/go/src/net/http/server.go:1596 +0x96
+net/http.(*conn).serve(0xc00058c0a0, 0x1549080, 0xc000592000)
+	/usr/local/go/src/net/http/server.go:1900 +0x8aa
+created by net/http.(*Server).Serve
+	/usr/local/go/src/net/http/server.go:2933 +0x35c
+
+goroutine 26 [runnable]:
+context.WithCancel(0x1549080, 0xc000090180, 0x149d522, 0x4, 0xc0000ce088)
+	/usr/local/go/src/context/context.go:235 +0xab
+net/http.(*conn).readRequest(0xc0000c2000, 0x1549080, 0xc000090180, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/http/server.go:1004 +0x557
+net/http.(*conn).serve(0xc0000c2000, 0x1549080, 0xc000090180)
+	/usr/local/go/src/net/http/server.go:1822 +0x6d4
+created by net/http.(*Server).Serve
+	/usr/local/go/src/net/http/server.go:2933 +0x35c
+
+goroutine 87 [IO wait]:
+internal/poll.runtime_pollWait(0x91042d8, 0x72, 0xffffffffffffffff)
+	/usr/local/go/src/runtime/netpoll.go:203 +0x55
+internal/poll.(*pollDesc).wait(0xc000586018, 0x72, 0x0, 0x1, 0xffffffffffffffff)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:87 +0x45
+internal/poll.(*pollDesc).waitRead(...)
+	/usr/local/go/src/internal/poll/fd_poll_runtime.go:92
+internal/poll.(*FD).Read(0xc000586000, 0xc00051a2e1, 0x1, 0x1, 0x0, 0x0, 0x0)
+	/usr/local/go/src/internal/poll/fd_unix.go:169 +0x201
+net.(*netFD).Read(0xc000586000, 0xc00051a2e1, 0x1, 0x1, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/fd_unix.go:202 +0x4f
+net.(*conn).Read(0xc00058a000, 0xc00051a2e1, 0x1, 0x1, 0x0, 0x0, 0x0)
+	/usr/local/go/src/net/net.go:184 +0x8e
+net/http.(*connReader).backgroundRead(0xc00051a2d0)
+	/usr/local/go/src/net/http/server.go:678 +0x58
+created by net/http.(*connReader).startBackgroundRead
+	/usr/local/go/src/net/http/server.go:674 +0xd0
+
+goroutine 116 [runnable]:
+net/http.(*connReader).lock(0xc0005880f0)
+	/usr/local/go/src/net/http/server.go:654 +0xd0
+net/http.(*connReader).backgroundRead(0xc0005880f0)
+	/usr/local/go/src/net/http/server.go:679 +0x88
+created by net/http.(*connReader).startBackgroundRead
+	/usr/local/go/src/net/http/server.go:674 +0xd0
+exit status 2

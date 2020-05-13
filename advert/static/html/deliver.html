@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            background: url("https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3961805512,3602784894&fm=26&gp=0.jpg") no-repeat;
+            background-size: 100% 100%;
+            height: 800px;
+            width: 100%;
+            position: relative;
+            margin: 0px;
+        }
+        header {
+            text-align: right;
+            height: 2em;
+            line-height: 2em;
+            background-color: rgba(27, 25, 25, 0.5);
+            color: white;
+            font-weight: bold;
+        }
+        header a {
+            margin: 0px 12px;
+            color: white;
+            display: inline-block;
+        }
+        .login-block {
+            position: absolute;
+            left: 200px;
+            top: 100px;
+            background-color: rgba(255,255,255, 0.7);
+            padding-bottom: 20px;
+            width: 300px;
+        }
+        button {
+            display: block;
+            width: 270px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 3em;
+            border-radius: 5px;
+            margin-top: 20px;
+            background-color: #2fbd2f;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #92e892;
+            cursor: pointer;
+        }
+
+        .login-block .input {
+            margin-top: 10px;
+        }
+
+        .login-block .input input {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            height: 3em;
+            border-radius: 5px;
+            width: 270px;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 0px;
+            height: 100px;
+            width: 100%;
+            background-color: black;
+            left: 0px;
+        }
+
+        .upload-btn {
+            background: url(http://imgserv.cloud-paas.com/images/16f7a40a88cb5bb47ccc1f7600ebed6c.jpeg) no-repeat;
+            background-size: 100% 100%;
+            display: block;
+            width: 270px;
+            height: 120px;
+            margin: 0px auto;
+        }
+        #upload_image {
+            opacity: 0;
+            display: block;
+            width: 270px;
+            height: 120px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<header>
+    Hi, {{.Name}}!<a href="javascript:logout()">logout</a>
+</header>
+<div class="login-block">
+    <img id="icon" src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2395032552,2899619273&amp;fm=26&amp;gp=0.jpg" width="150px" height="150px" style="margin: 10px auto;display: block;">
+    <img id="image" width="90%" style="display: none; margin: 10px auto; display: block;">
+    <div class="input">
+        <input id="name" type="text" placeholder="ADVERTISING NAME">
+    </div>
+    <div class="input">
+        <input id="contents" type="text" placeholder="CONTENTS">
+    </div>
+    <div class="input">
+        <input id="link" type="text" placeholder="LINK">
+    </div>
+    <div class="input">
+        <input id="type" type="text" placeholder="TYPE">
+    </div>
+    <div class="input">
+        <input id="level" type="text" placeholder="LEVEL">
+    </div>
+    <div class="input">
+        <input id="price" type="text" placeholder="PRICE">
+    </div>
+    <div class="input">
+        <em style="margin-left: 15px; font-style: normal; font-weight: bold;">Balance:</em> <em id="balance" style="margin-left: 15px; font-style: normal; font-weight: bold;">${{.Balance}}</em><a id="pay" href="javascript:void(0)" style="margin-left: 15px; font-style: normal; font-weight: bold;">Pay</a>
+    </div>
+    <div class="input upload-btn">
+        <input id="upload_image" type="file">
+    </div>
+    <button onclick="javascript:submit()">Submit</button>
+</div>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/jsencrypt/3.0.0-beta.1/jsencrypt.js"></script>
+<script>
+    var imageUrl = ""
+    $('#upload_image').change(function(){
+        var form = new FormData()
+        form.append("image", $('#upload_image').get(0).files[0])
+        $.ajax({
+            url: 'http://imgserv.cloud-paas.com/images',
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            data: form,
+            success: function(data){
+                $('#icon').hide()
+                $('#upload_image').parent().hide()
+                $('#image').show()
+                $('#image').attr("src", 'http://imgserv.cloud-paas.com' + data)
+                imageUrl = 'http://imgserv.cloud-paas.com' + data
+            }
+        })
+    })
+    function submit() {
+        var name = $('#name').val()
+        var contents = $('#contents').val()
+        var link = $('#link').val()
+        var price = $('#price').val() * 1
+        var _type = $('#type').val()
+        var level = $('#level').val()
+        $.ajax({
+            url: "/adverts",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({name, contents, link, price, level, image: imageUrl, type: _type}),
+            success: function(){
+                alert("OK")
+                window.location.href = 'http://advert.cuihovah-car.com/deliver'
+            }
+        })
+    }
+    $('#pay').click(function(){
+        $.ajax({
+            url: "/pay",
+            type: "POST",
+            success: function(data){
+                $('#balance').html('$' + data)
+            }
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            background: url({{.Image}}) no-repeat;
+            background-size: 300px 150px;
+            height: 150px;
+            width: 300px;
+            padding: 0px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<button id="close" style="
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    border-radius: 0px;
+    border: 1px;
+    background-color: rgba(0,0,0,0);
+    cursor: pointer;
+">x</button>
+<div style="
+    position: fixed;
+    top: 120px;
+    color: red;
+    font-weight: 900;
+">{{.Contents}}</div>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
+<script>
+    $("#close").click(function(e){
+        e.stopPropagation()
+        window.open("about:blank","_self").close()
+    })
+
+    $('body').click(function(){
+        window.open("{{.Link}}")
+    })
+</script>
+</body>
+</html>
