@@ -1,16 +1,16 @@
 package news
 
 import (
+	"../common"
+	"../uc"
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"net/url"
-
-	"../common"
 	//"html/template"
-	"../sso"
+	//"../sso"
 	"../webserv"
 	"io/ioutil"
 	"net/http"
@@ -55,21 +55,22 @@ func (s *BackServ) Index(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		values, _ := url.ParseQuery(r.URL.RawQuery)
 		token := values.Get("token")
 		if token != "" {
-			session, err := sso.DecodeToken(s, token)
+			session, err := uc.DecodeToken(s, token)
 			if err != nil {
-				sso.Redirect(s, w)
+				uc.Redirect(s, w)
 			} else {
-				sso.SetCookie(s, w, session)
+				uc.SetCookie(s, w, session)
 				s.Pages.RenderPage(w, "index", session)
 			}
 		} else {
-			sso.Redirect(s, w)
+			uc.Redirect(s, w)
 		}
 	} else {
 		// OK Done!
 		s.Pages.RenderPage(w, "index", session)
 	}
 }
+
 func (s *BackServ) GetProp() map[string]string {
 	return map[string]string{
 		"domain":   s.domain,
@@ -85,15 +86,15 @@ func (s *BackServ) PostPage(w http.ResponseWriter, r *http.Request, _ httprouter
 		values, _ := url.ParseQuery(r.URL.RawQuery)
 		token := values.Get("token")
 		if token != "" {
-			session, err := sso.DecodeToken(s, token)
+			session, err := uc.DecodeToken(s, token)
 			if err != nil {
-				sso.Redirect(s, w)
+				uc.Redirect(s, w)
 			} else {
-				sso.SetCookie(s, w, session)
+				uc.SetCookie(s, w, session)
 				s.Pages.RenderPage(w, "index", session)
 			}
 		} else {
-			sso.Redirect(s, w)
+			uc.Redirect(s, w)
 		}
 	} else {
 		// OK Done!

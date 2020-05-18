@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login User Center</title>
+    <style>
+        body {
+            background: url("https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1749011447,4156092243&fm=26&gp=0.jpg") no-repeat;
+            background-size: 100% 100%;
+            height: 600px;
+            width: 100%;
+            position: relative;
+            margin: 0px;
+        }
+        #content {
+            width: 25%;
+            background-color: white;
+            padding: 25px;
+            margin: auto;
+            margin-top: 100px;
+            opacity: 0.95;
+        }
+        #content > * {
+            display: block;
+            width: 100%;
+            height: 3em;
+            line-height: 3em;
+            margin: 2em 0px;
+        }
+        button {
+            background-color: #50af51;
+            color: white;
+            cursor: pointer;
+        }
+        #content .register {
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+            padding: 0px;
+            margin: 0px;
+        }
+        .register a {
+            color: #7bbb5b;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <input id="user_id" type="text" name="name" placeholder="USERNAME">
+        <input id="name" type="text" name="name" placeholder="USERNAME">
+        <input id="password" type="password" name="name" placeholder="PASSWORD">
+        <input id="password2" type="password" name="name_2" placeholder="ENSURE PASSWORD">
+        <input id="phone" type="text" name="phone" placeholder="PHONE">
+        <input id="email" type="text" name="email" placeholder="E-MAIL">
+        <button onclick="javascript:submit()">Submit</button>
+    </div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/jsencrypt/3.0.0-beta.1/jsencrypt.js"></script>
+    <script>
+        function submit() {
+            var id = $('#user_id').val()
+            var name = $('#name').val()
+            var password = $('#password').val()
+            var phone = $('#phone').val()
+            var email = $('#email').val()
+            $.ajax({
+                url: "/rsa",
+                type: "GET",
+                success: function(publicKey){
+                    var encrypt = new JSEncrypt()
+                    encrypt.setPublicKey(publicKey)
+                    password = encrypt.encrypt(password)
+                    $.ajax({
+                        url: "/user-register",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({id, password, name, phone, email}),
+                        success: function(data){
+                            alert("OK")
+                        },
+                        error: function(data){
+                        }
+                    });
+                }
+            })
+            
+        }
+    </script>
+</body>
+</html>

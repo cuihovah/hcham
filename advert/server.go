@@ -9,6 +9,7 @@ import (
 	"html/template"
 	"io/ioutil"
 	"net/http"
+	"net/rpc"
 	"net/url"
 	"path"
 	"time"
@@ -29,7 +30,6 @@ type UserData struct {
 	Name    string  `json:"name" bson:"name"`
 	Balance float32 `json:"balance" bson:"balance"`
 }
-
 func (s *Server) recommend(prop map[string]int, num int) []AdvertData {
 	kv := make(KeyValue, 0)
 	for k, v := range prop {
@@ -52,7 +52,6 @@ func (s *Server) recommend(prop map[string]int, num int) []AdvertData {
 	}
 	return adverts
 }
-
 func (s *Server) Advert(w http.ResponseWriter, r *http.Request, param httprouter.Params) {
 	ssid, err := r.Cookie(s.ssName)
 	header := w.Header()
@@ -124,7 +123,6 @@ func (s *Server) Advert(w http.ResponseWriter, r *http.Request, param httprouter
 		//t.Execute(w, map[string]interface{}{"balance": user.Balance})
 	}
 }
-
 func (s *Server) Index(w http.ResponseWriter, r *http.Request, param httprouter.Params) {
 	w.Header().Set("content-type", "text/html")
 	filepath := path.Join(s.spath, "html", "index.html")
@@ -135,7 +133,6 @@ func (s *Server) Index(w http.ResponseWriter, r *http.Request, param httprouter.
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	//var advert []AdvertData
 	advert := &AdvertData{}
 	pipe := s.database.C("advert").Pipe([]bson.M{
 		bson.M{"$sample": bson.M{"size": 1}},
@@ -171,7 +168,6 @@ func (s *Server) RecommendTextList(w http.ResponseWriter, r *http.Request, param
 	}
 	w.Write(buf)
 }
-
 func (s *Server) RecommendIMax(w http.ResponseWriter, r *http.Request, param httprouter.Params) {
 	w.Header().Set("content-type", "application/json")
 	var adverts []AdvertData
@@ -239,6 +235,8 @@ func (s *Server) Run(port string) {
 	s.router.POST("/adverts", s.Deliver)
 	s.router.POST("/recommend-text", s.RecommendTextList)
 	s.router.GET("/imax-image-text", s.RecommendIMax)
+	rpc.Register(s)
+	s.router.Handler("CONNECT", rpc.DefaultRPCPath, rpc.DefaultServer)
 	startStr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(startStr, s.router)
 }

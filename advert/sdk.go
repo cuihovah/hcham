@@ -5,15 +5,16 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/rpc"
 	"strings"
 )
 
 type SDK struct {
-	advertUrl string
+	url string
 }
 
-func (s *SDK) GetTextRecommends(prop map[string]int) ([]AdvertData, error) {
-	destUrl := fmt.Sprintf("%s/recommend-text", s.advertUrl)
+func (s *SDK) HTTPGetTextRecommends(prop map[string]int) ([]AdvertData, error) {
+	destUrl := fmt.Sprintf("%s/recommend-text", s.url)
 	v, _ := json.Marshal(prop)
 	resp, err := http.Post(destUrl, "application/json", strings.NewReader(string(v)))
 	if err != nil {
@@ -28,8 +29,8 @@ func (s *SDK) GetTextRecommends(prop map[string]int) ([]AdvertData, error) {
 	return ret, err
 }
 
-func (s *SDK) GetIMaxRecommends() ([]AdvertData, error) {
-	destUrl := fmt.Sprintf("%s/imax-image-text", s.advertUrl)
+func (s *SDK) HTTPGetIMaxRecommends() ([]AdvertData, error) {
+	destUrl := fmt.Sprintf("%s/imax-image-text", s.url)
 	resp, err := http.Get(destUrl)
 	if err != nil {
 		return nil, err
@@ -43,6 +44,26 @@ func (s *SDK) GetIMaxRecommends() ([]AdvertData, error) {
 	return ret, err
 }
 
-func (s *SDK) SetServ(_url string) {
-	s.advertUrl = _url
+func (s *SDK) RPCGetTextRecommends(prop map[string]int) ([]AdvertData, error) {
+	advert := make([]AdvertData, 0)
+	client, err := rpc.DialHTTP("tcp", s.url)
+	if err != nil {
+		return nil, err
+	}
+	err = client.Call("Server.RPCGetTextRecommends", prop, &advert)
+	return advert, err
+}
+
+func (s *SDK) RPCGetIMaxRecommends(num int) ([]AdvertData, error) {
+	advert := make([]AdvertData, 0)
+	client, err := rpc.DialHTTP("tcp", s.url)
+	if err != nil {
+		return nil, err
+	}
+	err = client.Call("Server.RPCGetIMaxRecommends", num, &advert)
+	return advert, err
+}
+
+func (s *SDK) SetServ(url string) {
+	s.url = url
 }

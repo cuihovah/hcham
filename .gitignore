@@ -13,3 +13,10 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+.idea
+.DS_Store
+go_build_main_go
+uc-fe/
+privateKey.pem
+publicKey.pem

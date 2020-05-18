@@ -82,12 +82,18 @@ func (s *FrontServ) Index(w http.ResponseWriter, r *http.Request, _ httprouter.P
 		return
 	}
 	imageNews := news[1:]
-	adv, _ := s.AdvertSDK.GetTextRecommends(recommend)
+	adv, err := s.AdvertSDK.RPCGetTextRecommends(recommend)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 	cars := make([]NewsItem, 100, 100)
 	err = s.database.C("news").Find(bson.M{"type": "汽车"}).All(&cars)
 	cartoon := make([]NewsItem, 100, 100)
 	err = s.database.C("news").Find(bson.M{"type": "动漫"}).All(&cartoon)
-	imax, _ := s.AdvertSDK.GetIMaxRecommends()
+	imax, err := s.AdvertSDK.RPCGetIMaxRecommends(3)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 	//err = s.database.C("advert").Find(bson.M{"level": "imax"}).Limit(3).All(&imax)
 	s.Pages.RenderPage(w, "news_index", map[string]interface{}{
 		"News":       news,
